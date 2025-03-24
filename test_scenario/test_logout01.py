@@ -14,6 +14,11 @@ from excel_update import update_excel_with_image
 
 # กำหนด SheetName
 sheetName = "logout01"
+# กำหนด Username, Password, National-ID, Invaild และ Vaild สำหรับทดสอบ
+userName = "65502100005-5"
+passWord = "1909802580627"
+nationalID = "1909802580627"
+inVaild = "5555" #กำหนดสำหรับข้อมูลผิด
 
 # Login with valid username and valid password and valid national-ID
 def test_logout01_pos01(page: Page):
@@ -25,9 +30,9 @@ def test_logout01_pos01(page: Page):
     # กำหนดเว็ปทดสอบ
     page.goto("https://reg.rmutk.ac.th/registrar/login.asp")
     # กรอก Username, Password, National-ID
-    page.locator('input[name="f_uid"]').fill("65502100005-5")
-    page.locator('input[name="f_pwd"]').fill("1909802580627")
-    page.locator('input[name="f_idcard"]').fill("1909802580627")
+    page.locator('input[name="f_uid"]').fill(userName)
+    page.locator('input[name="f_pwd"]').fill(passWord)
+    page.locator('input[name="f_idcard"]').fill(nationalID)
     page.locator('input[type="submit"][value=" เข้าสู่ระบบ "]').click()
 
     # กด logout

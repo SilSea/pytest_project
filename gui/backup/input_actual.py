@@ -13,12 +13,10 @@ LOGS_PATH = os.path.join('logs')
 def display_image(imagesName):
     file_path = IMAGES_PATH + imagesName  # กำหนด path ของภาพที่นี่
     try:
-        # โหลดภาพจาก Path Images
         image = Image.open(file_path)
-        # ปรับขนาดภาพ
-        image = image.resize((1000, 500), Image.Resampling.LANCZOS)
-        # สร้างภาพลง GUI
         photo = ImageTk.PhotoImage(image)
+
+        # แสดงภาพตามขนาดจริง
         label_image.config(image=photo)
         label_image.image = photo  # เก็บการอ้างอิงให้ภาพไม่หาย
     except Exception as e:
@@ -28,7 +26,7 @@ def display_image(imagesName):
 def show_text(event=None):
 
     # รับข้อความจากช่องกรอก
-    entered_text = entry.get("1.0", tk.END).strip()
+    entered_text = entry.get()
 
     # ตรวจสอบว่าไฟล์ logs.txt มีอยู่หรือไม่
     log_file_path = os.path.join(LOGS_PATH, "logs.txt")
@@ -66,7 +64,7 @@ def start_gui(imagesName):
 
     # สร้างช่องกรอกข้อความ และปรับขนาดตัวอักษร
     global entry
-    entry = tk.Text(root, width=40, height=3, font=("Sarabun", 32))  # ขนาดตัวอักษร 32
+    entry = tk.Entry(root, width=40, font=("Sarabun", 32))  # ขนาดตัวอักษร 32
     entry.pack(pady=10)
 
     # ให้ cursor focus ที่ช่องกรอกข้อความ

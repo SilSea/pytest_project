@@ -14,6 +14,11 @@ from excel_update import update_excel_with_image
 
 # กำหนด SheetName
 sheetName = "login01"
+# กำหนด Username, Password, National-ID, Invaild และ Vaild สำหรับทดสอบ
+userName = "65502100005-5"
+passWord = "1909802580627"
+nationalID = "1909802580627"
+inVaild = "5555" #กำหนดสำหรับข้อมูลผิด
 
 # Login with valid username and valid password and valid national-ID
 def test_login01_pos01(page: Page):
@@ -25,9 +30,9 @@ def test_login01_pos01(page: Page):
     # กำหนดเว็ปทดสอบ
     page.goto("https://reg.rmutk.ac.th/registrar/login.asp")
     # กรอก Username, Password, National-ID
-    page.locator('input[name="f_uid"]').fill("65502100005-5")
-    page.locator('input[name="f_pwd"]').fill("1909802580627")
-    page.locator('input[name="f_idcard"]').fill("1909802580627")
+    page.locator('input[name="f_uid"]').fill(userName)
+    page.locator('input[name="f_pwd"]').fill(passWord)
+    page.locator('input[name="f_idcard"]').fill(nationalID)
     page.locator('input[type="submit"][value=" เข้าสู่ระบบ "]').click()
 
     # Screenshot ภาพ
@@ -59,9 +64,9 @@ def test_login01_neg01(page: Page):
     # กำหนดเว็ปทดสอบ
     page.goto("https://reg.rmutk.ac.th/registrar/login.asp")
     # กรอก Username, Password, National-ID
-    page.locator('input[name="f_uid"]').fill("65502100005-5")
-    page.locator('input[name="f_pwd"]').fill("5555")
-    page.locator('input[name="f_idcard"]').fill("5555")
+    page.locator('input[name="f_uid"]').fill(userName)
+    page.locator('input[name="f_pwd"]').fill(inVaild)
+    page.locator('input[name="f_idcard"]').fill(inVaild)
     page.locator('input[type="submit"][value=" เข้าสู่ระบบ "]').click()
 
     # Screenshot ภาพ
@@ -70,8 +75,10 @@ def test_login01_neg01(page: Page):
 
     # ตรวจสอบ PASS/FAILED
     try: # กรณี PASS
-        assert page.wait_for_selector("text=กรุณาป้อนรหัสประจำตัวและรหัสผ่านให้ถูกต้อง",timeout=5000).is_visible()
-        assert error_message.evaluate('element => window.getComputedStyle(element).color') == "rgb(0,0,255)"
+        expect_text = page.wait_for_selector("text=กรุณาป้อนรหัสประจำตัวและรหัสผ่านให้ถูกต้อง",timeout=5000)
+        color_text = expect_text.evaluate('element => window.getComputedStyle(element).color')
+        assert expect_text.is_visible()
+        assert color_text == "rgb(0,0,255)"
         testResult = 'PASS'
     except: # กรณี FAILED
         # แสดง GUI ถ้าผลลัพธ์ผิด
@@ -94,9 +101,9 @@ def test_login01_neg02(page: Page):
     # กำหนดเว็ปทดสอบ
     page.goto("https://reg.rmutk.ac.th/registrar/login.asp")
     # กรอก Username, Password, National-ID
-    page.locator('input[name="f_uid"]').fill("65502100005-5")
-    page.locator('input[name="f_pwd"]').fill("1909802580627")
-    page.locator('input[name="f_idcard"]').fill("5555")
+    page.locator('input[name="f_uid"]').fill(userName)
+    page.locator('input[name="f_pwd"]').fill(passWord)
+    page.locator('input[name="f_idcard"]').fill(inVaild)
     page.locator('input[type="submit"][value=" เข้าสู่ระบบ "]').click()
 
     # Screenshot ภาพ
@@ -105,7 +112,10 @@ def test_login01_neg02(page: Page):
 
     # ตรวจสอบ PASS/FAILED
     try: # กรณี PASS
-        assert page.wait_for_selector("text=กรุณาป้อนรหัสประจำตัวและรหัสผ่านให้ถูกต้อง",timeout=5000).is_visible()
+        expect_text = page.wait_for_selector("text=กรุณาป้อนรหัสประจำตัวและรหัสผ่านให้ถูกต้อง",timeout=5000)
+        color_text = expect_text.evaluate('element => window.getComputedStyle(element).color')
+        assert expect_text.is_visible()
+        assert color_text == "rgb(255, 0, 0)"
         testResult = 'PASS'
     except: # กรณี FAILED
         # แสดง GUI ถ้าผลลัพธ์ผิด
@@ -128,9 +138,9 @@ def test_login01_neg03(page: Page):
     # กำหนดเว็ปทดสอบ
     page.goto("https://reg.rmutk.ac.th/registrar/login.asp")
     # กรอก Username, Password, National-ID
-    page.locator('input[name="f_uid"]').fill("5555")
-    page.locator('input[name="f_pwd"]').fill("1909802580627")
-    page.locator('input[name="f_idcard"]').fill("5555")
+    page.locator('input[name="f_uid"]').fill(inVaild)
+    page.locator('input[name="f_pwd"]').fill(passWord)
+    page.locator('input[name="f_idcard"]').fill(inVaild)
     page.locator('input[type="submit"][value=" เข้าสู่ระบบ "]').click()
 
     # Screenshot ภาพ
@@ -139,7 +149,10 @@ def test_login01_neg03(page: Page):
 
     # ตรวจสอบ PASS/FAILED
     try: # กรณี PASS
-        assert page.wait_for_selector("text=กรุณาป้อนรหัสประจำตัวและรหัสผ่านให้ถูกต้อง",timeout=5000).is_visible()
+        expect_text = page.wait_for_selector("text=กรุณาป้อนรหัสประจำตัวและรหัสผ่านให้ถูกต้อง",timeout=5000)
+        color_text = expect_text.evaluate('element => window.getComputedStyle(element).color')
+        assert expect_text.is_visible()
+        assert color_text == "rgb(255, 0, 0)"
         testResult = 'PASS'
     except: # กรณี FAILED
         # แสดง GUI ถ้าผลลัพธ์ผิด
@@ -162,9 +175,9 @@ def test_login01_neg04(page: Page):
     # กำหนดเว็ปทดสอบ
     page.goto("https://reg.rmutk.ac.th/registrar/login.asp")
     # กรอก Username, Password, National-ID
-    page.locator('input[name="f_uid"]').fill("5555")
-    page.locator('input[name="f_pwd"]').fill("5555")
-    page.locator('input[name="f_idcard"]').fill("1909802580627")
+    page.locator('input[name="f_uid"]').fill(inVaild)
+    page.locator('input[name="f_pwd"]').fill(inVaild)
+    page.locator('input[name="f_idcard"]').fill(nationalID)
     page.locator('input[type="submit"][value=" เข้าสู่ระบบ "]').click()
 
     # Screenshot ภาพ
@@ -173,7 +186,10 @@ def test_login01_neg04(page: Page):
 
     # ตรวจสอบ PASS/FAILED
     try: # กรณี PASS
-        assert page.wait_for_selector("text=กรุณาป้อนรหัสประจำตัวและรหัสผ่านให้ถูกต้อง",timeout=5000).is_visible()
+        expect_text = page.wait_for_selector("text=กรุณาป้อนรหัสประจำตัวและรหัสผ่านให้ถูกต้อง",timeout=5000)
+        color_text = expect_text.evaluate('element => window.getComputedStyle(element).color')
+        assert expect_text.is_visible()
+        assert color_text == "rgb(255, 0, 0)"
         testResult = 'PASS'
     except: # กรณี FAILED
         # แสดง GUI ถ้าผลลัพธ์ผิด
@@ -196,9 +212,9 @@ def test_login01_neg05(page: Page):
     # กำหนดเว็ปทดสอบ
     page.goto("https://reg.rmutk.ac.th/registrar/login.asp")
     # กรอก Username, Password, National-ID
-    page.locator('input[name="f_uid"]').fill("5555")
-    page.locator('input[name="f_pwd"]').fill("5555")
-    page.locator('input[name="f_idcard"]').fill("5555")
+    page.locator('input[name="f_uid"]').fill(inVaild)
+    page.locator('input[name="f_pwd"]').fill(inVaild)
+    page.locator('input[name="f_idcard"]').fill(inVaild)
     page.locator('input[type="submit"][value=" เข้าสู่ระบบ "]').click()
 
     # Screenshot ภาพ
@@ -207,7 +223,10 @@ def test_login01_neg05(page: Page):
 
     # ตรวจสอบ PASS/FAILED
     try: # กรณี PASS
-        assert page.wait_for_selector("text=กรุณาป้อนรหัสประจำตัวและรหัสผ่านให้ถูกต้อง",timeout=5000).is_visible()
+        expect_text = page.wait_for_selector("text=กรุณาป้อนรหัสประจำตัวและรหัสผ่านให้ถูกต้อง",timeout=5000)
+        color_text = expect_text.evaluate('element => window.getComputedStyle(element).color')
+        assert expect_text.is_visible()
+        assert color_text == "rgb(255, 0, 0)"
         testResult = 'PASS'
     except: # กรณี FAILED
         # แสดง GUI ถ้าผลลัพธ์ผิด

@@ -22,7 +22,7 @@ def update_excel_with_image(sheet_name, search_word, h_data, img_path):
         g_data = file.read()
 
     # วนลูปผ่านแต่ละแถว
-    for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row):  # min_row=2 เพื่อข้ามแถวหัวข้อ
+    for row in sheet.iter_rows(min_row=0, max_row=sheet.max_row): 
         for cell in row:
             # ถ้าคำในเซลล์ตรงกับคำที่ค้นหา
             if cell.value == search_word:
