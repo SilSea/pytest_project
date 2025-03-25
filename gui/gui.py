@@ -1,7 +1,9 @@
+import tkinter as tk
 import os
 import subprocess
+import sys
 from pathlib import Path
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, scrolledtext
 from PIL import Image, ImageTk
 
 # กำหนด Path Assets
@@ -63,6 +65,62 @@ window.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}
 # Window Background
 window.configure(bg = "#373838")
 
+# ฟังชั่น RunTestcase
+def run_tests():
+    # ตรวจสอบว่า Excel เปิดอยู่ไหม
+    tasklist_output = subprocess.run("tasklist", capture_output=True, text=True, shell=True)
+    # ปิด Excel ถ้ากำลังรันอยู่
+    if "EXCEL.EXE" in tasklist_output.stdout:
+        subprocess.run("taskkill /f /im excel.exe", check=True, shell=True)
+        print("Excel has been terminated.")
+    else:
+        print("Excel is not running.")
+    
+    # สั่งรัน Pytest และกำหนด Browser ที่รันพร้อมเก็บ Text
+    get_text = subprocess.run(['pytest', '-v', '--headed', '--browser', browser.lower(), TEST_SCENARIO_PATH], capture_output=True, text=True)
+
+    # สร้าง GUI สำหรับแสดงผลลัพธ์
+    root = tk.Tk()
+    root.title("ผลลัพธ์")
+
+    # Text Widget สำหรับแสดงผลลัพธ์ pytest
+    text_output = scrolledtext.ScrolledText(root, width=80, height=10)
+    text_output.pack(padx=10, pady=10)
+
+    # แยกผลลัพธ์ออกเป็นบรรทัด
+    output_lines = get_text.stdout.strip().split("\n")
+
+    # หาเฉพาะบรรทัดที่มี "PASSED" หรือ "FAILED" และแสดงบรรทัดที่มีผลการทดสอบ
+    relevant_output = []
+    for line in output_lines:
+        if "PASSED" in line or "FAILED" in line:
+            relevant_output.append(line)
+
+    # หาข้อความและเพิ่มบรรทัดสุดท้ายที่เกี่ยวกับผลการทดสอบทั้งหมด
+    summary_line = next((line for line in reversed(output_lines) if "passed" in line or "failed" in line), None)
+
+    # เพิ่มบรรทัดสุดท้ายที่มีผลการทดสอบรวม
+    if summary_line:
+        relevant_output.append(summary_line)
+
+    # แสดงผลใน GUI และทำการไฮไลท์สี
+    for line in relevant_output:
+        if "PASSED" in line:
+            text_output.insert(tk.END, line + "\n", "pass")
+        elif "FAILED" in line:
+            text_output.insert(tk.END, line + "\n", "fail")
+        else:
+            text_output.insert(tk.END, line + "\n")
+
+    text_output.see(tk.END)  # เลื่อนหน้าจอไปยังบรรทัดสุดท้าย
+
+    # กำหนดสีสำหรับ PASS และ FAILED
+    text_output.tag_configure("pass", foreground="green")
+    text_output.tag_configure("fail", foreground="red")
+
+    # เริ่มต้น loop ของ Tkinter
+    root.mainloop()
+
 # ตั้งค่า Frame
 canvas = Canvas(
     window,
@@ -100,12 +158,7 @@ button_image_2 = PhotoImage( # โหลดภาพ
 # สร้างปุ่ม
 button_2 = Button(
     image=button_image_2, # นำเข้ารูปภาพ
-    command=lambda: [ # Event เมื่อกดปุ่ม
-        # ปิด Excel
-        subprocess.run("taskkill /f /im excel.exe", check=True, shell=True),
-        # สั่งรัน Pytest และกำหนด Browser สำหรับ Run
-        subprocess.run(['pytest', '-v', '--headed', '--browser', browser.lower(), TEST_SCENARIO_PATH])
-    ],
+    command=run_tests,
     highlightthickness = 0, # ความหนาของขอบ
     relief="ridge", # ขอบปุ่ม
     bg="black" # สีพื้นหลัง
@@ -124,7 +177,7 @@ button_image_3 = PhotoImage( # โหลดภาพ
     file=relative_to_assets("button_3.png"))
 button_3 = Button(
     image=button_image_3, # นำเข้ารูปภาพ
-    command=lambda: subprocess.run(['start', TEST_SHEET_PATH], shell=True), # Event เมื่อกดปุ่ม
+    command=lambda: subprocess.run(['start', TEST_SHEET_PATH], check=True, shell=True), # Event เมื่อกดปุ่ม
     highlightthickness = 0, # ความหนาของขอบ
     relief="ridge", # ขอบปุ่ม
     bg="black" # สีพื้นหลัง
