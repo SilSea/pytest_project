@@ -5,4 +5,4 @@ import subprocess
 GUI_PATH = os.path.join('gui')
 
 # เปิด GUI
-subprocess.run(['python', GUI_PATH + '/gui.py'])
+subprocess.run(['python', GUI_PATH + '/setting.py'])

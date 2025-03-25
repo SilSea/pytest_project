@@ -8,9 +8,45 @@ TEST_SHEET_PATH = os.path.realpath('testsheet_lab.xlsx')
 
 # กำหนด Path Logs
 LOGS_PATH = os.path.join('logs', 'logs.txt')
+SETTING_PATH = os.path.join('logs', 'setting.txt')
 
+# แก้ไขข้อมูลของ Tester กับข้อมูล Environment
+def update_name_env():
+    # เปิดไฟล์ Excel
+    workbook = openpyxl.load_workbook(TEST_SHEET_PATH)
+
+    # เปิดไฟล์ Setting เพื่ออ่านข้อมูล
+    with open(SETTING_PATH, "r", encoding="utf-8") as file:
+        lines = file.readlines()
+
+    # กำหนดข้อมูล
+    tester_name = lines[0].strip().split(": ", 1)[1]
+    tester_env = lines[1].strip() + "\n" + lines[2].strip()
+    # กำหนดคำค้นหา
+    search_dict = {
+        "Tester Name": tester_name,
+        "Test Environment": tester_env
+    }
+
+    # วนลูปทุกชีตในไฟล์
+    for sheet_name in workbook.sheetnames:
+        worksheet = workbook[sheet_name]
+
+        # วนลูปผ่านแต่ละแถว
+        for row in worksheet.iter_rows():
+            for cell in row:
+                # ถ้าคำในเซลล์ตรงกับคำที่ค้นหา
+                if cell.value in search_dict:
+                    new_value = search_dict[cell.value]
+                    target_cell = cell.offset(0, 1)  # เซลล์ที่อยู่ขวาของคำค้นหา
+                    target_cell.value = new_value
+
+    # บันทึกการเปลี่ยนแปลงลงในไฟล์ Excel
+    workbook.save(TEST_SHEET_PATH)
+    workbook.close()
+
+# อัพเดตข้อมูลการทดสอบลง Excel
 def update_excel_with_image(sheet_name, search_word, h_data, img_path):
-
     # เปิดไฟล์ Excel
     workbook = openpyxl.load_workbook(TEST_SHEET_PATH)
 

@@ -1,0 +1,3 @@
+Tester Name: Nattawut Poolkhet
+OS: Windows 11
+Browser: Firefox

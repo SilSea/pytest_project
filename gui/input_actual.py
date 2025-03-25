@@ -9,6 +9,9 @@ IMAGES_PATH = os.path.join('images')
 # กำหนด Path Logs
 LOGS_PATH = os.path.join('logs')
 
+# กำหนด Path Icon
+ICON_FILE = os.path.abspath("gui/assets/icon/icon.png")
+
 # ฟังก์ชันสำหรับแสดงภาพตาม path ที่กำหนด
 def display_image(imagesName):
     file_path = IMAGES_PATH + imagesName  # กำหนด path ของภาพที่นี่
@@ -46,11 +49,22 @@ def show_text(event=None):
 def start_gui(imagesName):
     # สร้างหน้าต่างหลัก
     global root
+    # สร้าง Window ขึ้นมา
     root = tk.Tk()
+    # Window Title
     root.title("กรุณากรอกค่า Actual ที่เกิดขึ้น")
+    # โหลดไอคอนจากไฟล์ภาพที่ต้องการ (เช่น .png หรือ .jpg)
+    image = Image.open(ICON_FILE)
+    photo = ImageTk.PhotoImage(image)
+    # กำหนดไอคอนสำหรับหน้าต่าง
+    root.iconphoto(True, photo)
 
     # เปิดหน้าต่างมาเต็มจอ
     root.state('zoomed')  # เปิดมาเต็มหน้าจอ
+
+    # ทำให้หน้าต่างเด้งขึ้นมาเป็นหน้าต่างหลักสุด
+    root.attributes("-topmost", 1)
+    root.lift()
 
     # Label สำหรับแสดงข้อความด้านบน
     label_text = tk.Label(root, text="กรุณากรอกค่า Actual ที่เกิดขึ้น", font=("Sarabun", 24, "bold"))

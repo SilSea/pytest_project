@@ -2,6 +2,7 @@ import os
 import subprocess
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from PIL import Image, ImageTk
 
 # กำหนด Path Assets
 OUTPUT_PATH = Path(__file__).parent
@@ -16,6 +17,19 @@ TEST_SCENARIO_PATH = os.path.join('test_scenario')
 # กำหนด Path Module
 MODULE_PATH = os.path.join('module')
 
+# กำหนด Path Setting
+SETTING_PATH = os.path.join('logs', 'setting.txt')
+
+# กำหนด Path Icon
+ICON_FILE = os.path.abspath("gui/assets/icon/icon.png")
+
+# เปิดไฟล์ Setting เพื่ออ่านข้อมูล
+with open(SETTING_PATH, "r", encoding="utf-8") as file:
+    lines = file.readlines()
+
+# กำหนด Browser ที่เลือก
+browser = lines[2].split(":")[1].strip()
+
 # สร้าง Function เข้าถึง Assets
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -25,6 +39,11 @@ window = Tk()
 
 # Window Title
 window.title("Project สิ้นใจ")
+# โหลดไอคอนจากไฟล์ภาพที่ต้องการ (เช่น .png หรือ .jpg)
+image = Image.open(ICON_FILE)
+photo = ImageTk.PhotoImage(image)
+# กำหนดไอคอนสำหรับหน้าต่าง
+window.iconphoto(True, photo)
 
 # กำหนดขนาด Window
 window_width = 900
@@ -81,7 +100,12 @@ button_image_2 = PhotoImage( # โหลดภาพ
 # สร้างปุ่ม
 button_2 = Button(
     image=button_image_2, # นำเข้ารูปภาพ
-    command=lambda: subprocess.run(['pytest', '-v', '--headed', TEST_SCENARIO_PATH]), # Event เมื่อกดปุ่ม
+    command=lambda: [ # Event เมื่อกดปุ่ม
+        # ปิด Excel
+        subprocess.run("taskkill /f /im excel.exe", check=True, shell=True),
+        # สั่งรัน Pytest และกำหนด Browser สำหรับ Run
+        subprocess.run(['pytest', '-v', '--headed', '--browser', browser.lower(), TEST_SCENARIO_PATH])
+    ],
     highlightthickness = 0, # ความหนาของขอบ
     relief="ridge", # ขอบปุ่ม
     bg="black" # สีพื้นหลัง
