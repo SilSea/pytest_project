@@ -3,6 +3,10 @@ import os
 import subprocess
 import sys
 from tkinter import ttk
+
+# สั่งติดตั้ง Package Pillow
+subprocess.run(['pip', 'install', 'pillow', '-q', '--no-input'])
+
 from PIL import Image, ImageTk
 
 # สั่งติดตั้ง Package Excel Edit
