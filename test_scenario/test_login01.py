@@ -15,9 +15,9 @@ from excel_update import update_excel_with_image
 # กำหนด SheetName
 sheetName = "login01"
 # กำหนด Username, Password, National-ID, Invaild และ Vaild สำหรับทดสอบ
-userName = "65502100005-5"
-passWord = "1909802580627"
-nationalID = "1909802580627"
+userName = "5555"
+passWord = "5555"
+nationalID = "5555"
 inVaild = "5555" #กำหนดสำหรับข้อมูลผิด
 
 # Login with valid username and valid password and valid national-ID
