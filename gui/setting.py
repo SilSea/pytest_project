@@ -5,6 +5,10 @@ import sys
 from tkinter import ttk
 from PIL import Image, ImageTk
 
+# สั่งติดตั้ง Package Excel Edit
+subprocess.run(['pip', 'install', 'openpyxl', '-q', '--no-input'])
+
+# ดึงที่อยู่ Module
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'module')))
 from excel_update import update_name_env
 
