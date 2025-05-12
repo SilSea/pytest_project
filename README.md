@@ -1,1 +1,1 @@
-This Program create to test automatic check web site and update data in excel
+This Program create for test website automatic if is actual or not actual and update data to excel
